@@ -1,40 +1,629 @@
 <!doctype html>
-<html lang="en">
-	<head>
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <title>Importancia del Dato</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reset.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/theme/black.css">
+    <script src="https://cdn.jsdelivr.net/npm/@simonwep/pickr@1.8.0/dist/pickr.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+    <link href="https://cdn.jsdelivr.net/npm/@simonwep/pickr@1.8.0/dist/themes/nano.min.css" rel="stylesheet">
+    <style>
+        input[type=range] {
+            appearance: none;
+            width: 100%;
+            height: 15px;
+            border-radius: 5px;
+            background: #d3d3d3;
+            outline: none;
+            padding: 0;
+            margin: 0;
+        }
+        input[type=range]::-webkit-slider-thumb {
+            appearance: none;
+            width: 35px;
+            height: 35px;
+            border: 5px solid black;
+            border-radius: 50%;
+            background: #ffffff;
+            cursor: pointer;
+            transition: background .15s ease-in-out;
+        }
 
-		<title>reveal.js</title>
+        input[type=range]::-moz-range-thumb {
+            width: 35px;
+            height: 35px;
+            border: 5px solid black;
+            border-radius: 50%;
+            background: #ffffff;
+            cursor: pointer;
+            transition: background .15s ease-in-out;
+        }
+        input[type=range]::-webkit-slider-thumb:hover {
+            background: #ffef08;
+        }
+        input[type=range]::-moz-range-thumb:hover {
+            background: #ffef08;
+        }
+        #colorRectRGB {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            transition: background-color 0.2s ease;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 500%; height: 500%;
+            background-color: black;
+        }
+        #colorRectCMY {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            transition: background-color 0.2s ease;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 500%; height: 500%;
+            background-color: white;
+        }
+        #colorRectHSL{
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            transition: background-color 0.2s ease;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 500%; height: 500%;
+        }
+        #colorRectHSLPicker{
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            transition: background-color 0.2s ease;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -15%);
+            width: 500%; height: 500%;
+            background-color: black;
+        }
+        #colorRectLAB{
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            transition: background-color 0.2s ease;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -15%);
+            width: 500%; height: 500%;
+            background-color: black;
+        }
+        #title {
+            color: white;
+            transition: color 0.2s ease; /* Add this line */
+        }
+        .colorLabel {
+            color: white;
+            transition: color 0.2s ease;
+        }
+        .smallText {
+            font-size: 0.6em;
+        }
+        body {
+            margin: 0;
+            padding: 0;
+        }
 
-		<link rel="stylesheet" href="dist/reset.css">
-		<link rel="stylesheet" href="dist/reveal.css">
-		<link rel="stylesheet" href="dist/theme/black.css">
+        .logo {
+            position: fixed;
+            bottom: 10px;
+            left: 10px;
+            width: 170px; /* Ajusta el tamaño del logo según sea necesario */
+            z-index: 1000;
+        }
+        .contact-info {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            font-size: 18px;
+            color: white;
+            z-index: 1000;
+        }
 
-		<!-- Theme used for syntax highlighted code -->
-		<link rel="stylesheet" href="plugin/highlight/monokai.css">
-	</head>
-	<body>
-		<div class="reveal">
-			<div class="slides">
-				<section>Slide 1</section>
-				<section>Slide 2</section>
-			</div>
-		</div>
+        section {
+            padding: 20px;
+        }
 
-		<script src="dist/reveal.js"></script>
-		<script src="plugin/notes/notes.js"></script>
-		<script src="plugin/markdown/markdown.js"></script>
-		<script src="plugin/highlight/highlight.js"></script>
-		<script>
-			// More info about initialization & config:
-			// - https://revealjs.com/initialization/
-			// - https://revealjs.com/config/
-			Reveal.initialize({
-				hash: true,
+        .red-background {
+            background-color: #cc2233 !important; color: white; 
+        }
+    
+        .white-background {
+            background-color: #f7f6ff !important; color: white; 
+        }
 
-				// Learn about plugins: https://revealjs.com/plugins/
-				plugins: [ RevealMarkdown, RevealHighlight, RevealNotes ]
-			});
-		</script>
-	</body>
+
+        #colorRect {
+            width: 100%;
+            height: 100px;
+            background-color: grey;
+            margin-bottom: 20px;
+        }
+    
+
+        #radarChartContainer {
+            width: 100%;
+            max-width: 800px;
+            height: 500px;
+            margin: 0 auto;
+        }
+
+        #radarChart {
+            width: 100%;
+            height: 100%;
+        }
+
+        .control-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px; /* Mayor separación entre controles */
+        }
+
+        .control-group label {
+            flex: 1;
+            font-size: 0.7em;
+        }
+
+        .control-group input {
+            flex: 1;
+            height: 18px;
+        }
+
+
+    </style>
+    
+</head>
+<body>
+    <img src="https://firebasestorage.googleapis.com/v0/b/wsuite3.appspot.com/o/logos%2FLogo2020_Normal.png?alt=media&token=1c9ca8dc-9f1b-419b-ad2b-b277c93b180a" alt="Logo" class="logo">
+    <div class="contact-info"; style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+        📧lucas@datawalt.cl  📞+56990784008<br>
+        
+    </div>
+
+    <div class="reveal">
+        <div class="slides">
+            <section class="red-background">
+                <h1 style="text-transform: capitalize; text-shadow: 2px 2px 4px black; font-size: 44px;">Importancia del Dato</h1>
+                <h3 style="text-transform: none; text-shadow: 2px 2px 4px black; font-size: 20px;">para IRADE</h3>        
+            </section>
+
+            <section class="white-background" style="padding: 20px;">
+                <h1 style="font-size: 44px; text-transform: none; text-shadow: 1px 1px 2px black;">Lucas Waltemath</h1>
+                <li style="font-size: 30px;">CEO y fundador de Datawalt.</li>
+                <li style="font-size: 30px;">Ing. Control de Gestión.</li>
+                <li style="font-size: 30px;">28 años.</li>
+                <img src="https://cdn.prod.website-files.com/5cfda6804352637475b0287c/60fee009ebfe906cf209f16a_5f3c5be0ee6c31b4508dcc56_Equipo_Lucas.jpg" alt="Azul Amarillo" style="max-width: 200px; height: auto; border: 2px solid black; background-color: white;">
+            </section>
+
+            <section class="white-background" style="padding: 20px;">
+                <h1 style="font-size: 44px; text-transform: none; text-shadow: 1px 1px 2px black;">Marcos Waltemath</h1>
+                <li style="font-size: 30px;">CTO y fundador de Datawalt.</li>
+                <li style="font-size: 30px;">Ing. Civíl Mecánico.</li>
+                <li style="font-size: 30px;">30 años.</li>
+                <img src="https://cdn.prod.website-files.com/5cfda6804352637475b0287c/61c372efbf9935edb1294378_Marcos-web-2.jpg" alt="Azul Amarillo" style="max-width: 200px; height: auto; border: 2px solid black; background-color: white;">
+            </section>
+
+
+            <section class="white-background" style="padding: 20px;">
+                <h1 style="font-size: 44px; text-transform: none; text-shadow: 1px 1px 2px black;">Datawalt</h1>
+                <li style="font-size: 30px;">Fundada 2018 (Bootstrapping)</li>
+                <li style="font-size: 30px;">Chile y Perú</li>
+                <li style="font-size: 30px;">Eficientar la Reportería</li>
+                <img src="https://cdn.prod.website-files.com/5c4df49f348539e3ffca3bcd/620d4dde1b3f883045dfcac2_Integracion-01.svg" alt="Azul Amarillo" style="max-width: 400px; height: auto; border: 2px solid black; background-color: white;">
+            </section>
+
+
+            <section style="padding: 20px;">
+                <h1 style="font-size: 44px; text-transform: none; text-shadow: 2px 2px 4px black;">
+                    <span style="font-weight: 100;">¿Qué es el </span> <span style="font-weight: 700; font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">dato?</span> 
+                </h1>
+                <p style="font-size: 30px;">Un dato es una representación simbólica (numérica, alfabética, algorítmica, etc.) de una característica o atributo de una entidad.</p>
+            </section>
+
+            <section style="padding: 20px;">
+                <h1 style="font-size: 44px; text-transform: none; text-shadow: 2px 2px 4px black;">
+                    <span style="font-weight: 100;">Pueden ser de 2 tipos...</span> 
+                </h1>
+                <p style="font-size: 30px;">Cuantitativos o Cualitativos</p>
+            </section>
+
+            <section>
+                <img src="https://cdn.technologyadvice.com/wp-content/uploads/2023/09/qualitative-vs-quantitative-data-NEW.jpg" alt="Ejemplo de contraste">
+            </section>
+
+            <section>
+                <div style="display: flex; flex-direction: column;">
+                    <img src="https://intellspot.com/wp-content/uploads/2018/03/qualitative-and-quantitative-data-a-short-infographic.png" alt="Ejemplo color">
+                </div>
+            </section>
+
+            <section class="white-background">
+                <h1 style="text-transform: none; text-shadow: 1px 1px 2px black; font-size: 44px;">El dato en la empresa 🏭</h1>
+            </section>
+
+            <section>
+                <h1 style="font-size: 44px; text-transform: none; text-shadow: 2px 2px 4px black;">
+                    <span style="font-weight: 100;">¿Cómo nace el dato en una empresa?</span> 
+                </h1>
+                <p class="smallText">Nace a través de transacciones comerciales, interacciones con clientes, operaciones internas, sistemas y aplicaciones, investigaciones de mercado, y fuentes externas como redes sociales y proveedores de datos.</p>
+                <img src="https://i.giphy.com/xT9C25UNTwfZuk85WP.webp" alt="Conos Bastones" style="max-width: 300px; height: auto; border: 2px solid black; background-color: white;">
+            </section>
+
+            <section>
+                <h2 style="font-size: 44px; text-transform: none; text-shadow: 2px 2px 4px black;">Si no hay sistema, no hay data de calidad ❌</h2>
+                <p class="smallText">El dato debe ser lo más estructurado y escalable posible. Normalmente los ERP inhouse suelen tener problemas con los modelos de datos.</p>
+                <p class="smallText">Las empresas deben saber escoger el sistema que utilizan para almacenar datos de sus operaciones: ERP, CRM, HRM, Etc.</p>
+                <img src="https://miro.medium.com/v2/resize:fit:1200/1*_PhOYLvfmzHiHSwmr34hvw.jpeg" alt="Azul Amarillo" style="max-width: 400px; height: auto; border: 2px solid black; background-color: white;">
+            </section>
+
+            <section>
+                <img src="https://miro.medium.com/v2/resize:fit:940/1*SetbhxUrEFMAy12BMkr6EQ.gif" alt="Brigthness Lightness" style="max-width: 800px; height: auto; border: 2px solid black; background-color: white;">
+            </section>
+
+            <section>
+                <p>Ahora que tengo BBDD, qué hago?</p>
+                <ul>
+                    <li class="smallText">Depende...</li>
+                    <li class="smallText">Lo normal es usar la data para entregar información útil a la toma de decisiones.</li>
+                    <li class="smallText">Sin embargo, todo depende de la necesidad de disponibilidad requerida por el tomador de decisión.</li>
+                </ul>
+            </section>
+
+            <section>
+                <div id="colorRect"></div>
+                <h2 id="title" style="color: white;">🕹️</h2>
+                <div>
+                    <label class="colorLabel" for="availability">Disponibilidad del Dato:</label>
+                    <input type="range" id="availability" min="0" max="100" value="0" oninput="changeBackgroundColor()">
+                    <p class="smallText">Controla la disponibilidad del dato.</p>
+                </div>
+                <div>
+                    <label class="colorLabel" for="decision">Toma de Decisión:</label>
+                    <input type="range" id="decision" min="0" max="100" value="0" oninput="changeBackgroundColor()">
+                    <p class="smallText">Controla la toma de decisión.</p>
+                </div>
+            </section>
+            <script>
+                function changeBackgroundColor() {
+                    const availability = document.getElementById('availability').value;
+                    const decision = document.getElementById('decision').value;
+                    const colorRect = document.getElementById('colorRect');
+        
+                    if (decision < 50) {
+                        // Si la toma de decisión es baja, el fondo siempre será verde
+                        colorRect.style.backgroundColor = 'green';
+                    } else {
+                        // Ajusta el color según la disponibilidad del dato
+                        const red = Math.round(255 * (1 - availability / 100));
+                        const green = Math.round(255 * (availability / 100));
+                        colorRect.style.backgroundColor = `rgb(${red}, ${green}, 0)`;
+                    }
+                }
+            </script>
+
+            <section>
+                <h2 style="font-size: 44px; text-transform: none; text-shadow: 2px 2px 4px black;">Conclusiones ✍🏻</h2>
+                <p class="smallText"; style="color: #22cc39;">Si la decisión en mi negocio no es tiempo real, no necesito arquitecturas modernas 🐖.</p>
+                <p class="smallText"; style="color: #cc2233;">Si la decisión en mi negocio es constante, necesito arquitecturas que me permitan NRT (Near Real Time) 💰.</p>
+            </section>
+
+            <section>
+                <h2 style="font-size: 44px; text-transform: none; text-shadow: 2px 2px 4px black;">NO GASTEMOS RECURSOS INNECESARIAMENTE 😠</h2>
+                <ul>
+                    <li >Este año hemos atendido a 5 empresas grandes con problemas de arquitectura.</li>
+                    <li class="smallText">💸 Orquestadores caros.</li>
+                    <li class="smallText">💸 Modelos no optimizados.</li>
+                    <li class="smallText">💸 Consumos sin controles.</li>
+                    <li class="smallText"; style="color: #22cc39;">disminuyendo gastos de licencias de más del 60% en promedio</li>
+                </ul>
+            </section>
+
+            <section>
+                <h2 style="font-size: 44px; text-transform: none; text-shadow: 2px 2px 4px black;">No somos Houdini 🧙🏻‍♂️🎂</h2>
+                <p class="smallText">Pastelero a sus pasteles. Hay empresas que dedican 24/7 a entender las nuevas tecnologías y como implementarlas de manera correcta.</p>
+                <img src="https://64.media.tumblr.com/98e719f6e41e7b64a0bbef4294554721/tumblr_pqssyl5xEi1ynmhd4o3_500.gif" alt="RGB LED" style="max-width: 300px; height: auto; border: 2px solid white;">
+            </section>
+            
+            <section>
+                <h2 style="font-size: 44px; text-transform: none; text-shadow: 2px 2px 4px black;">Data Maturity Level 📊</h2>
+                <p class="smallText">Es una medida del desarrollo y sofisticación con que una organización gestiona y utiliza sus datos para la toma de decisiones.</p>
+                <img src="https://miro.medium.com/v2/resize:fit:1200/1*ZdliKqpfooEXPinesyZGVw.png" alt="Diagrama CMYK" style="max-width: 700px; height: auto; border: 2px solid black; background-color: white;">
+            </section>
+
+            
+        
+            <section class="container">
+                <div id="radarChartContainer">
+                    <canvas id="radarChart"></canvas>
+                </div>
+                <div>
+                    <h2 id="titleCMY" style="color: rgb(255, 255, 255); font-size: medium;">Parámetros</h2>
+                    <div class="scrollable">
+                        <div class="control-group">
+                            <label for="estrategiaDeDatos", style="font-size: small; ">Estrategia del Negocio</label>
+                            <input type="range" id="estrategiaDeDatos" min="0" max="5" value="1" step="0.1" oninput="updateRadarChart()">
+                        </div>
+                        <div class="control-group">
+                            <label for="data", style="font-size: small;">Data</label>
+                            <input type="range" id="data" min="0" max="5" value="1" step="0.1" oninput="updateRadarChart()">
+                        </div>
+                        <div class="control-group">
+                            <label for="cultura", style="font-size: small;">Cultura</label>
+                            <input type="range" id="cultura" min="0" max="5" value="1" step="0.1" oninput="updateRadarChart()">
+                        </div>
+                        <div class="control-group">
+                            <label for="arquitectura", style="font-size: small;">Arquitectura</label>
+                            <input type="range" id="arquitectura" min="0" max="5" value="1" step="0.1" oninput="updateRadarChart()">
+                        </div>
+                        <div class="control-group">
+                            <label for="dataGovernance", style="font-size: small;" >Data Governance</label>
+                            <input type="range" id="dataGovernance" min="0" max="5" value="1" step="0.1" oninput="updateRadarChart()">
+                        </div>
+                        <div class="control-group">
+                            <label for="onboarding", style="font-size: small;">Onboarding</label>
+                            <input type="range" id="onboarding" min="0" max="5" value="1" step="0.1" oninput="updateRadarChart()">
+                        </div>
+                        <p class="smallText">Ajusta los valores para cada campo.</p>
+                    </div>
+                </div>
+            </section>
+            <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+            <script>
+                let radarChart;
+            
+                function createRadarChart() {
+                    const ctx = document.getElementById('radarChart').getContext('2d');
+                    radarChart = new Chart(ctx, {
+                        type: 'radar',
+                        data: {
+                            labels: ['Estrategia de Negocio', 'Data', 'Cultura', 'Arquitectura', 'Data Governance', 'Onboarding'],
+                            datasets: [{
+                                label: 'Nivel de Madurez',
+                                data: [1, 1, 1, 1, 1, 1],
+                                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                                borderColor: 'rgba(75, 192, 192, 1)',
+                                borderWidth: 2
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            scales: {
+                                r: {
+                                    angleLines: {
+                                        display: true
+                                    },
+                                    suggestedMin: 0,
+                                    suggestedMax: 5,
+                                    pointLabels: {
+                                        font: {
+                                            size: 14
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    });
+                }
+            
+                function updateRadarChart() {
+                    const newData = [
+                        document.getElementById('estrategiaDeDatos').value,
+                        document.getElementById('data').value,
+                        document.getElementById('cultura').value,
+                        document.getElementById('arquitectura').value,
+                        document.getElementById('dataGovernance').value,
+                        document.getElementById('onboarding').value
+                    ].map(Number);
+                    radarChart.data.datasets[0].data = newData;
+                    radarChart.update();
+                }
+            
+                document.addEventListener('DOMContentLoaded', () => {
+                    createRadarChart();
+                });
+            </script>
+
+
+<section class="white-background">
+    <h1 style="text-transform: capitalize; text-shadow: 1px 1px 2px black; font-size: 44px;">Importancia del Dato 📍</h1>
+    <h3 style="text-transform: none; text-shadow: 1px 1px 2px black; font-size: 20px;">el dato es el que habilita la transformación digital</h3>        
+</section>
+
+
+            <section>
+                <h2 style="font-size: 44px; text-transform: none; text-shadow: 2px 2px 4px black;">De qué formas se puede implementar?</h2>
+                <ul>
+                    <li class="smallText">1. Internamente</li>
+                    <li class="smallText">2. Partner </li>
+                    <li class="smallText">3. Modelo Mixto</li>
+                    <li class="smallText">4. Outsourcing</li>
+                </ul>
+            </section>
+
+
+
+<!-- Cumplimiento de Objetivos Estratégicos -->
+<section style="padding: 20px;">
+    <h2 style="font-size: 36px; text-shadow: 2px 2px 4px black;">Cumplimiento de Objetivos Estratégicos</h2>
+    <canvas id="cumplimientoObjetivosChart" width="400" height="200"></canvas>
+    <p style="font-size: 20px;">Según un informe de Deloitte (2021), el 59% de las empresas que externalizan reportan un cumplimiento más efectivo de objetivos estratégicos, comparado con el 45% de las empresas que implementan proyectos internamente.</p>
+</section>
+
+<!-- Proyectos que Exceden Plazos -->
+<section style="padding: 20px;">
+    <h2 style="font-size: 36px; text-shadow: 2px 2px 4px black;">Proyectos que Exceden Plazos</h2>
+    <canvas id="excedenPlazosChart" width="400" height="200"></canvas>
+    <p style="font-size: 20px;">Un estudio de Gartner (2023) revela que el 55% de los proyectos internos exceden los plazos o presupuestos inicialmente establecidos.</p>
+</section>
+
+<!-- Empresas que Mejoran Rendimiento -->
+<section style="padding: 20px;">
+    <h2 style="font-size: 36px; text-shadow: 2px 2px 4px black;">Empresas que Mejoran Rendimiento</h2>
+    <canvas id="mejoranRendimientoChart" width="400" height="200"></canvas>
+    <p style="font-size: 20px;">Un informe de BDO (2023) muestra que el 72% de las empresas mejoraron su rendimiento en proyectos de TI mediante la externalización.</p>
+</section>
+
+    <!-- Script de Chart.js y Chartjs-plugin-datalabels -->
+    <script>
+        // Configuración común para los gráficos
+        const commonOptions = {
+            plugins: {
+                datalabels: {
+                    display: true,
+                    anchor: 'end',
+                    align: 'top',
+                    color: '#000',
+                    font: {
+                        weight: 'bold'
+                    },
+                    formatter: (value, context) => {
+                        return value + '%';
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    max: 100
+                }
+            }
+        };
+
+        // Cumplimiento de Objetivos Estratégicos
+        var ctx1 = document.getElementById('cumplimientoObjetivosChart').getContext('2d');
+        var cumplimientoObjetivosChart = new Chart(ctx1, {
+            type: 'bar',
+            data: {
+                labels: ['In-house', 'Externalización'],
+                datasets: [{
+                    label: 'Porcentaje',
+                    data: [45, 59],
+                    backgroundColor: ['#cc2233', '#22cc88'],
+                    borderColor: ['#cc2233', '#22cc88'],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                ...commonOptions,
+                plugins: {
+                    ...commonOptions.plugins,
+                    datalabels: {
+                        ...commonOptions.plugins.datalabels,
+                        display: true
+                    }
+                }
+            }
+        });
+
+        // Proyectos que Exceden Plazos
+        var ctx2 = document.getElementById('excedenPlazosChart').getContext('2d');
+        var excedenPlazosChart = new Chart(ctx2, {
+            type: 'bar',
+            data: {
+                labels: ['In-house'],
+                datasets: [{
+                    label: 'Porcentaje',
+                    data: [55],
+                    backgroundColor: ['#cc2233'],
+                    borderColor: ['#cc2233'],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                ...commonOptions,
+                plugins: {
+                    ...commonOptions.plugins,
+                    datalabels: {
+                        ...commonOptions.plugins.datalabels,
+                        display: true
+                    }
+                }
+            }
+        });
+
+        // Empresas que Mejoran Rendimiento
+        var ctx3 = document.getElementById('mejoranRendimientoChart').getContext('2d');
+        var mejoranRendimientoChart = new Chart(ctx3, {
+            type: 'bar',
+            data: {
+                labels: ['Externalización'],
+                datasets: [{
+                    label: 'Porcentaje',
+                    data: [72],
+                    backgroundColor: ['#22cc88'],
+                    borderColor: ['#22cc88'],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                ...commonOptions,
+                plugins: {
+                    ...commonOptions.plugins,
+                    datalabels: {
+                        ...commonOptions.plugins.datalabels,
+                        display: true
+                    }
+                }
+            }
+        });
+    </script>
+
+
+<section class="red-background">
+    <h2 style="font-size: 44px; text-transform: none; text-shadow: 2px 2px 4px black;">Estoy listo...</h2>
+    <p class="smallText">Algunas consideraciones importantes a la hora de implementar soluciones de datos:</p>
+    <ul>
+        <li class="smallText">🙅🏻‍♂️ El visualizador de datos (PBI, Tableau, Qlik, Looker,etc) no te soluciona los problemas por si solo.</li>
+        <li class="smallText">🤷🏻‍♂️ Tener 10 analistas planillando en XLSX, es lo mismo que tener 10 analistas desarrollando en PBI. </li>
+        <li class="smallText">✅ La manera correcta de implementar soluciones de datos es satisfaciendo la cadena completa de procesamiento del dato.</li>
+        <li class="smallText">🛑 Revender software ≠ Desarrollar Tecnología </li>
+        <li class="smallText">🤮 Los vendedores son el cáncer de la industria (Chile).</li>
+    </ul>
+    <img src="https://y.yarn.co/af9ece6a-d0ae-43e1-afd5-46a903790489_text.gif" alt="Diagrama HSL" style="max-width: 300px; height: auto; border: 2px solid black; background-color: white;">
+</section>
+
+            <section>
+                <h2 style="font-size: 44px; text-transform: none; text-shadow: 2px 2px 4px black;">Consejos para Evaluar Proyectos 🎯</h2>
+                <ul>
+                    <li>Verifica el licenciamiento de las herramientas, hoy es fácil dar acceso a los datos a entidades no autorizadas.</li>
+                    <li>Céntrate en la cadena de valor y als actividades claves del negocio, luego avanza con las secundarias.</li>
+                    <li>Identifica la velocidad de entendimiento que pueda tener un posible vendedor al ofrecerte algo.</li>
+                </ul>
+            </section>
+
+            <section class="white-background">
+                <img src="https://i.giphy.com/13qctMBrrgbwJi.webp" alt="" style="width: 60%; height: 10;">
+            </section>
+
+            <section>
+                <h2 style="font-size: 44px; text-transform: none; text-shadow: 2px 2px 4px black;">Recursos adicionales</h2>
+                <a class="button" href="https://youtu.be/pLqjQ55tz-U?si=ZKF6UIDUhURYX-eR" target="_blank"> David McCandless: La belleza de la visualización de datos</a>
+                <h2>   </h2>
+                <a class="button" href="https://eng317hannah.wordpress.ncsu.edu/files/2020/01/Krug_Steve_Dont_make_me_think_revisited___a_cz-lib.org_.pdf" target="_blank">Steve Krug: Don't Make me Think</a>
+            </section>
+
+            <section class="red-background">
+                <h1 style="font-size: 44px; text-transform: none; text-shadow: 2px 2px 4px black;">Gracias 🫡!</h1>
+            </section>
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.min.js"></script>
+    <script>
+        Reveal.initialize();
+    </script>
+</body>
 </html>
